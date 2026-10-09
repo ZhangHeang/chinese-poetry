@@ -35,7 +35,6 @@
   header h1 { margin: 0 0 8px; font-size: 26px; color: #e65100; letter-spacing: 1px; }
   header p { margin: 0; font-size: 14px; color: #bf6b22; }
 
-  /* ===== 级别切换（基础 / 进阶） ===== */
   .level-switch {
     display: flex;
     justify-content: center;
@@ -56,9 +55,7 @@
     cursor: pointer;
     transition: all .2s;
   }
-  .level-switch button:first-child {
-    border-radius: 999px 0 0 999px;
-  }
+  .level-switch button:first-child { border-radius: 999px 0 0 999px; }
   .level-switch button:last-child {
     border-radius: 0 999px 999px 0;
     border-left: none;
@@ -99,6 +96,30 @@
   }
   .toolbar button:hover { background: var(--primary); color: #fff; }
   .toolbar button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow); }
+
+  /* 选项开关行 */
+  .toolbar.options {
+    margin-top: 10px;
+  }
+  .toolbar.options button {
+    padding: 7px 16px;
+    font-size: 13px;
+    border-width: 1.5px;
+    background: #fff;
+    color: var(--text-light);
+    border-color: #ddd;
+  }
+  .toolbar.options button:hover {
+    background: #fff;
+    color: var(--primary-dark);
+    border-color: var(--primary);
+  }
+  .toolbar.options button.active {
+    background: #fff5eb;
+    color: var(--primary-dark);
+    border-color: var(--primary);
+    box-shadow: none;
+  }
 
   .categories {
     display: flex;
@@ -159,6 +180,13 @@
   .word-en { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin: 0 0 4px; word-break: break-word; }
   .word-phonetic { font-size: 13px; color: var(--text-light); margin: 0 0 6px; font-family: "Arial Unicode MS", "Lucida Sans Unicode", Arial, sans-serif; }
   .word-zh { font-size: 14px; color: var(--text); margin: 0; }
+  .word-sound {
+    font-size: 12px;
+    color: #ff8c42;
+    margin: 5px 0 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
   .speak-icon { position: absolute; top: 10px; right: 12px; font-size: 14px; opacity: .35; }
 
   .flashcard-wrap { display: none; max-width: 480px; margin: 40px auto 0; padding: 0 20px; text-align: center; }
@@ -177,6 +205,7 @@
   .flashcard .word-en { font-size: 42px; margin-bottom: 8px; }
   .flashcard .word-phonetic { font-size: 18px; margin-bottom: 10px; }
   .flashcard .word-zh { font-size: 22px; }
+  .flashcard .word-sound { font-size: 16px; margin-top: 8px; }
   .flashcard-controls { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
   .flashcard-controls button {
     padding: 12px 28px;
@@ -223,10 +252,9 @@
 
 <header>
   <h1>🌈 3岁宝宝英语启蒙单词</h1>
-  <p>点一点卡片，听一听发音，每天 5 分钟轻松学</p>
+  <p>点一点卡片，听发音 · 中文 · 叫声</p>
 </header>
 
-<!-- 级别切换 -->
 <div class="level-switch">
   <button id="levelBasic" class="active">基础<small>79 词 · 8 类</small></button>
   <button id="levelAdvanced">进阶<small>200 词 · 14 类</small></button>
@@ -238,10 +266,13 @@
   <button id="autoPlayBtn">🔁 自动朗读</button>
 </div>
 
+<div class="toolbar options">
+  <button id="toggleZh" class="active">🀄 读中文</button>
+  <button id="toggleSound" class="active">🐾 读叫声</button>
+</div>
+
 <div class="categories" id="categories"></div>
-
 <div class="stats" id="stats"></div>
-
 <div class="word-grid" id="wordGrid"></div>
 
 <div class="flashcard-wrap" id="flashcardWrap">
@@ -250,6 +281,7 @@
     <p class="word-en" id="fcEn">dog</p>
     <p class="word-phonetic" id="fcPhonetic">/dɔːɡ/</p>
     <p class="word-zh" id="fcZh">狗</p>
+    <p class="word-sound" id="fcSound">汪汪汪</p>
   </div>
   <div class="flashcard-controls">
     <button class="btn-speak" id="fcSpeak">🔊 再读一次</button>
@@ -264,7 +296,7 @@
     <li><strong>少量多次：</strong>每次 5～10 分钟，每天 1～2 次，比一次学很久更有效。</li>
     <li><strong>先听后说：</strong>3 岁宝宝以听为主，不强迫跟读，愿意模仿就及时鼓励。</li>
     <li><strong>结合实物：</strong>说到 apple 就拿起苹果，说到 nose 就摸摸鼻子，建立真实联系。</li>
-    <li><strong>游戏化：</strong>用"找一找""我说你指"等游戏代替背诵，让学习像玩一样。</li>
+    <li><strong>动物叫声：</strong>点动物卡片会读"汪汪""喵喵"，宝宝最爱模仿，是好玩又好记的入口。</li>
     <li><strong>重复是金：</strong>同一个词反复出现 10 次以上，宝宝才可能真正记住。</li>
     <li><strong>不纠正发音：</strong>3 岁发音不准很正常，多说多听，慢慢会自然纠正。</li>
     <li><strong>保持愉快：</strong>宝宝烦躁或抗拒时就停下来，别让英语变成压力。</li>
@@ -274,26 +306,27 @@
 <script>
 /* ============================================================
    数据：basic = 79 词 / 8 类；advanced = 200 词 / 14 类
+   sound 字段：中文拟声词，只有动物类有
    ============================================================ */
 const DATA = {
 
-  /* ---------------- 基础版 79 词 ---------------- */
+  /* ---------------- 基础版 ---------------- */
   basic: {
     animals: {
       name: '🐾 动物',
       words: [
-        { en: 'dog',     zh: '狗',   ph: '/dɔːɡ/',    emoji: '🐶' },
-        { en: 'cat',     zh: '猫',   ph: '/kæt/',     emoji: '🐱' },
-        { en: 'bird',    zh: '鸟',   ph: '/bɜːrd/',   emoji: '🐦' },
-        { en: 'fish',    zh: '鱼',   ph: '/fɪʃ/',     emoji: '🐟' },
-        { en: 'duck',    zh: '鸭子', ph: '/dʌk/',     emoji: '🦆' },
-        { en: 'rabbit',  zh: '兔子', ph: '/ˈræbɪt/',  emoji: '🐰' },
-        { en: 'bear',    zh: '熊',   ph: '/beər/',    emoji: '🐻' },
-        { en: 'pig',     zh: '猪',   ph: '/pɪɡ/',     emoji: '🐷' },
-        { en: 'cow',     zh: '奶牛', ph: '/kaʊ/',     emoji: '🐮' },
-        { en: 'monkey',  zh: '猴子', ph: '/ˈmʌŋki/',  emoji: '🐵' },
-        { en: 'tiger',   zh: '老虎', ph: '/ˈtaɪɡər/', emoji: '🐯' },
-        { en: 'elephant',zh: '大象', ph: '/ˈelɪfənt/',emoji: '🐘' }
+        { en: 'dog',     zh: '狗',   ph: '/dɔːɡ/',    emoji: '🐶', sound: '汪汪汪' },
+        { en: 'cat',     zh: '猫',   ph: '/kæt/',     emoji: '🐱', sound: '喵喵喵' },
+        { en: 'bird',    zh: '鸟',   ph: '/bɜːrd/',   emoji: '🐦', sound: '叽叽喳喳' },
+        { en: 'fish',    zh: '鱼',   ph: '/fɪʃ/',     emoji: '🐟', sound: '咕噜咕噜' },
+        { en: 'duck',    zh: '鸭子', ph: '/dʌk/',     emoji: '🦆', sound: '嘎嘎嘎' },
+        { en: 'rabbit',  zh: '兔子', ph: '/ˈræbɪt/',  emoji: '🐰', sound: '窸窸窣窣' },
+        { en: 'bear',    zh: '熊',   ph: '/beər/',    emoji: '🐻', sound: '吼吼' },
+        { en: 'pig',     zh: '猪',   ph: '/pɪɡ/',     emoji: '🐷', sound: '哼哼哼' },
+        { en: 'cow',     zh: '奶牛', ph: '/kaʊ/',     emoji: '🐮', sound: '哞——' },
+        { en: 'monkey',  zh: '猴子', ph: '/ˈmʌŋki/',  emoji: '🐵', sound: '吱吱吱' },
+        { en: 'tiger',   zh: '老虎', ph: '/ˈtaɪɡər/', emoji: '🐯', sound: '嗷呜——' },
+        { en: 'elephant',zh: '大象', ph: '/ˈelɪfənt/',emoji: '🐘', sound: '呜——' }
       ]
     },
     colors: {
@@ -400,33 +433,33 @@ const DATA = {
     }
   },
 
-  /* ---------------- 进阶版 200 词 ---------------- */
+  /* ---------------- 进阶版 ---------------- */
   advanced: {
     animals: {
       name: '🐾 动物',
       words: [
-        { en: 'dog',        zh: '狗',       ph: '/dɔːɡ/',      emoji: '🐶' },
-        { en: 'cat',        zh: '猫',       ph: '/kæt/',       emoji: '🐱' },
-        { en: 'bird',       zh: '鸟',       ph: '/bɜːrd/',     emoji: '🐦' },
-        { en: 'fish',       zh: '鱼',       ph: '/fɪʃ/',       emoji: '🐟' },
-        { en: 'duck',       zh: '鸭子',     ph: '/dʌk/',       emoji: '🦆' },
-        { en: 'rabbit',     zh: '兔子',     ph: '/ˈræbɪt/',    emoji: '🐰' },
-        { en: 'bear',       zh: '熊',       ph: '/beər/',      emoji: '🐻' },
-        { en: 'pig',        zh: '猪',       ph: '/pɪɡ/',       emoji: '🐷' },
-        { en: 'cow',        zh: '奶牛',     ph: '/kaʊ/',       emoji: '🐮' },
-        { en: 'monkey',     zh: '猴子',     ph: '/ˈmʌŋki/',    emoji: '🐵' },
-        { en: 'tiger',      zh: '老虎',     ph: '/ˈtaɪɡər/',   emoji: '🐯' },
-        { en: 'elephant',   zh: '大象',     ph: '/ˈelɪfənt/',  emoji: '🐘' },
-        { en: 'lion',       zh: '狮子',     ph: '/ˈlaɪən/',    emoji: '🦁' },
-        { en: 'horse',      zh: '马',       ph: '/hɔːrs/',     emoji: '🐴' },
-        { en: 'sheep',      zh: '绵羊',     ph: '/ʃiːp/',      emoji: '🐑' },
-        { en: 'frog',       zh: '青蛙',     ph: '/frɔːɡ/',     emoji: '🐸' },
-        { en: 'mouse',      zh: '老鼠',     ph: '/maʊs/',      emoji: '🐭' },
-        { en: 'panda',      zh: '熊猫',     ph: '/ˈpændə/',    emoji: '🐼' },
-        { en: 'chicken',    zh: '小鸡',     ph: '/ˈtʃɪkɪn/',   emoji: '🐔' },
-        { en: 'butterfly',  zh: '蝴蝶',     ph: '/ˈbʌtərflaɪ/',emoji: '🦋' },
-        { en: 'bee',        zh: '蜜蜂',     ph: '/biː/',       emoji: '🐝' },
-        { en: 'snake',      zh: '蛇',       ph: '/sneɪk/',     emoji: '🐍' }
+        { en: 'dog',        zh: '狗',       ph: '/dɔːɡ/',      emoji: '🐶', sound: '汪汪汪' },
+        { en: 'cat',        zh: '猫',       ph: '/kæt/',       emoji: '🐱', sound: '喵喵喵' },
+        { en: 'bird',       zh: '鸟',       ph: '/bɜːrd/',     emoji: '🐦', sound: '叽叽喳喳' },
+        { en: 'fish',       zh: '鱼',       ph: '/fɪʃ/',       emoji: '🐟', sound: '咕噜咕噜' },
+        { en: 'duck',       zh: '鸭子',     ph: '/dʌk/',       emoji: '🦆', sound: '嘎嘎嘎' },
+        { en: 'rabbit',     zh: '兔子',     ph: '/ˈræbɪt/',    emoji: '🐰', sound: '窸窸窣窣' },
+        { en: 'bear',       zh: '熊',       ph: '/beər/',      emoji: '🐻', sound: '吼吼' },
+        { en: 'pig',        zh: '猪',       ph: '/pɪɡ/',       emoji: '🐷', sound: '哼哼哼' },
+        { en: 'cow',        zh: '奶牛',     ph: '/kaʊ/',       emoji: '🐮', sound: '哞——' },
+        { en: 'monkey',     zh: '猴子',     ph: '/ˈmʌŋki/',    emoji: '🐵', sound: '吱吱吱' },
+        { en: 'tiger',      zh: '老虎',     ph: '/ˈtaɪɡər/',   emoji: '🐯', sound: '嗷呜——' },
+        { en: 'elephant',   zh: '大象',     ph: '/ˈelɪfənt/',  emoji: '🐘', sound: '呜——' },
+        { en: 'lion',       zh: '狮子',     ph: '/ˈlaɪən/',    emoji: '🦁', sound: '吼——' },
+        { en: 'horse',      zh: '马',       ph: '/hɔːrs/',     emoji: '🐴', sound: '嘶——' },
+        { en: 'sheep',      zh: '绵羊',     ph: '/ʃiːp/',      emoji: '🐑', sound: '咩咩咩' },
+        { en: 'frog',       zh: '青蛙',     ph: '/frɔːɡ/',     emoji: '🐸', sound: '呱呱呱' },
+        { en: 'mouse',      zh: '老鼠',     ph: '/maʊs/',      emoji: '🐭', sound: '吱吱吱' },
+        { en: 'panda',      zh: '熊猫',     ph: '/ˈpændə/',    emoji: '🐼', sound: '呜——' },
+        { en: 'chicken',    zh: '小鸡',     ph: '/ˈtʃɪkɪn/',   emoji: '🐔', sound: '咯咯咯' },
+        { en: 'butterfly',  zh: '蝴蝶',     ph: '/ˈbʌtərflaɪ/',emoji: '🦋', sound: '扑棱扑棱' },
+        { en: 'bee',        zh: '蜜蜂',     ph: '/biː/',       emoji: '🐝', sound: '嗡嗡嗡' },
+        { en: 'snake',      zh: '蛇',       ph: '/sneɪk/',     emoji: '🐍', sound: '嘶嘶嘶' }
       ]
     },
     colors: {
@@ -698,11 +731,15 @@ const DATA = {
 };
 
 /* ================= 状态 ================= */
-let level = 'basic';                       // 'basic' | 'advanced'
+let level = 'basic';
 let currentCat = Object.keys(DATA[level])[0];
 let autoPlayTimer = null;
 let flashIndex = 0;
 let flashPool = [];
+
+/* 选项开关 */
+let optReadZh = true;       // 是否读中文
+let optReadSound = true;    // 是否读动物叫声
 
 /* ================= DOM ================= */
 const categoriesEl = document.getElementById('categories');
@@ -719,46 +756,101 @@ const fcEmoji      = document.getElementById('fcEmoji');
 const fcEn         = document.getElementById('fcEn');
 const fcPhonetic   = document.getElementById('fcPhonetic');
 const fcZh         = document.getElementById('fcZh');
+const fcSound      = document.getElementById('fcSound');
+const toggleZh     = document.getElementById('toggleZh');
+const toggleSound  = document.getElementById('toggleSound');
 
 /* ================= 语音合成 ================= */
-let preferredVoice = null;
+let voiceEn = null;
+let voiceZh = null;
 
-function pickVoice() {
+function pickVoices() {
+  if (!('speechSynthesis' in window)) return;
   const voices = window.speechSynthesis.getVoices();
   if (!voices.length) return;
-  const prefer = [
+
+  // 英文语音
+  const enPrefers = [
     v => /en-GB/i.test(v.lang) && /female|Serena|Kate|Google UK English Female/i.test(v.name),
     v => /en-US/i.test(v.lang) && /female|Samantha|Google US English/i.test(v.name),
     v => /^en/i.test(v.lang)
   ];
-  for (const test of prefer) {
-    const found = voices.find(test);
-    if (found) { preferredVoice = found; break; }
+  for (const t of enPrefers) {
+    const f = voices.find(t);
+    if (f) { voiceEn = f; break; }
+  }
+
+  // 中文语音
+  const zhPrefers = [
+    v => /zh-CN/i.test(v.lang) && /female|Xiaoxiao|Huihui|Google 普通话|Tingting/i.test(v.name),
+    v => /zh-CN/i.test(v.lang),
+    v => /^zh/i.test(v.lang)
+  ];
+  for (const t of zhPrefers) {
+    const f = voices.find(t);
+    if (f) { voiceZh = f; break; }
   }
 }
 
 if ('speechSynthesis' in window) {
-  pickVoice();
-  window.speechSynthesis.onvoiceschanged = pickVoice;
+  pickVoices();
+  window.speechSynthesis.onvoiceschanged = pickVoices;
 }
 
-function speak(text, cardEl) {
-  if (!('speechSynthesis' in window)) return;
+/* 按顺序朗读一串内容 */
+function speakSequence(items, onDone) {
+  if (!('speechSynthesis' in window)) { onDone && onDone(); return; }
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US';
-  u.rate = 0.75;
-  u.pitch = 1.1;
-  if (preferredVoice) u.voice = preferredVoice;
+  if (!items.length) { onDone && onDone(); return; }
 
+  let i = 0;
+  function next() {
+    if (i >= items.length) { onDone && onDone(); return; }
+    const item = items[i++];
+    const u = new SpeechSynthesisUtterance(item.text);
+    u.lang = item.lang || 'en-US';
+    u.rate = item.rate || 0.8;
+    u.pitch = item.pitch || 1.1;
+    if (u.lang === 'zh-CN' && voiceZh) u.voice = voiceZh;
+    if (u.lang === 'en-US' && voiceEn) u.voice = voiceEn;
+    u.onend = () => setTimeout(next, item.gap != null ? item.gap : 260);
+    u.onerror = () => setTimeout(next, 120);
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+
+/* 根据单词生成朗读序列 */
+function buildSequence(w) {
+  const items = [];
+  // 1. 英文
+  items.push({ text: w.en, lang: 'en-US', rate: 0.75, pitch: 1.1, gap: 320 });
+  // 2. 中文
+  if (optReadZh) {
+    items.push({ text: w.zh, lang: 'zh-CN', rate: 0.85, pitch: 1.1, gap: 360 });
+  }
+  // 3. 动物叫声
+  if (optReadSound && w.sound) {
+    items.push({ text: w.sound, lang: 'zh-CN', rate: 0.9, pitch: 1.25, gap: 200 });
+  }
+  return items;
+}
+
+/* 点击卡片 / 抽卡 / 自动朗读 统一调用 */
+function playWord(w, cardEl, onDone) {
+  const items = buildSequence(w);
   if (cardEl) {
     cardEl.classList.add('speaking');
-    u.onend = () => cardEl.classList.remove('speaking');
+    speakSequence(items, () => {
+      cardEl.classList.remove('speaking');
+      onDone && onDone();
+    });
+  } else {
+    speakSequence(items, onDone);
   }
-  window.speechSynthesis.speak(u);
 }
 
-/* ================= 工具：当前级别的数据 ================= */
+/* ================= 工具 ================= */
 function currentData() { return DATA[level]; }
 
 /* ================= 渲染 ================= */
@@ -797,8 +889,9 @@ function renderWords() {
       <p class="word-en">${w.en}</p>
       <p class="word-phonetic">${w.ph}</p>
       <p class="word-zh">${w.zh}</p>
+      ${w.sound ? `<p class="word-sound">🔉 ${w.sound}</p>` : ''}
     `;
-    card.addEventListener('click', () => speak(w.en, card));
+    card.addEventListener('click', () => playWord(w, card));
     wordGrid.appendChild(card);
   });
 }
@@ -828,8 +921,10 @@ function showFlashCard() {
   fcEn.textContent = w.en;
   fcPhonetic.textContent = w.ph;
   fcZh.textContent = w.zh;
+  fcSound.textContent = w.sound ? `🔉 ${w.sound}` : '';
+  fcSound.style.display = w.sound ? 'block' : 'none';
   flashcard.style.animation = 'pop .35s ease';
-  speak(w.en, flashcard);
+  playWord(w, flashcard);
 }
 
 function nextFlashCard() {
@@ -848,7 +943,6 @@ function setLevel(newLevel) {
   renderWords();
   updateStats();
   buildFlashPool();
-  // 如果当前在抽卡模式，刷新一张新卡
   if (flashcardWrap.classList.contains('show')) {
     nextFlashCard();
   }
@@ -885,20 +979,38 @@ function startAutoPlay() {
 
   function next() {
     if (i >= words.length) { stopAutoPlay(); return; }
-    speak(words[i].en, cards[i]);
+    playWord(words[i], cards[i], () => {
+      if (!autoPlayTimer) return;  // 已被停止
+      autoPlayTimer = setTimeout(next, 500);
+    });
     i++;
-    autoPlayTimer = setTimeout(next, 2200);
   }
+  // 用一个占位定时器标记运行中
+  autoPlayTimer = setTimeout(() => {}, 0);
+  // 但真正的流程由 playWord 回调驱动，先把占位清掉
+  clearTimeout(autoPlayTimer);
+  autoPlayTimer = { running: true };
   next();
 }
 
 function stopAutoPlay() {
-  if (autoPlayTimer) clearTimeout(autoPlayTimer);
+  if (autoPlayTimer && autoPlayTimer.running) autoPlayTimer.running = false;
   autoPlayTimer = null;
   autoPlayBtn.classList.remove('active');
   autoPlayBtn.textContent = '🔁 自动朗读';
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  wordGrid.querySelectorAll('.word-card').forEach(c => c.classList.remove('speaking'));
 }
+
+/* ================= 选项开关 ================= */
+toggleZh.addEventListener('click', () => {
+  optReadZh = !optReadZh;
+  toggleZh.classList.toggle('active', optReadZh);
+});
+toggleSound.addEventListener('click', () => {
+  optReadSound = !optReadSound;
+  toggleSound.classList.toggle('active', optReadSound);
+});
 
 /* ================= 事件 ================= */
 levelBasicBtn.addEventListener('click', () => setLevel('basic'));
@@ -913,11 +1025,11 @@ autoPlayBtn.addEventListener('click', () => {
 
 flashcard.addEventListener('click', () => {
   const w = flashPool[flashIndex % flashPool.length];
-  speak(w.en, flashcard);
+  playWord(w, flashcard);
 });
 document.getElementById('fcSpeak').addEventListener('click', () => {
   const w = flashPool[flashIndex % flashPool.length];
-  speak(w.en, flashcard);
+  playWord(w, flashcard);
 });
 document.getElementById('fcNext').addEventListener('click', nextFlashCard);
 
