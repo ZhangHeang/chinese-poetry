@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3岁宝宝英语启蒙单词</title>
+<style>
+  :root {
+    --bg: #fff8f0;
+    --card-bg: #ffffff;
+    --primary: #ff8c42;
+    --primary-dark: #e6732a;
+    --text: #3a3a3a;
+    --text-light: #888;
+    --shadow: 0 4px 16px rgba(255, 140, 66, 0.15);
+    --radius: 20px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    padding: 0 0 60px;
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 28px 20px 20px;
+    background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+    border-radius: 0 0 32px 32px;
+    box-shadow: 0 4px 20px rgba(255, 152, 0, 0.2);
+  }
+  header h1 { margin: 0 0 8px; font-size: 26px; color: #e65100; letter-spacing: 1px; }
+  header p { margin: 0; font-size: 14px; color: #bf6b22; }
+
+  /* ===== 级别切换（基础 / 进阶） ===== */
+  .level-switch {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 22px auto 0;
+    padding: 0 16px;
+    max-width: 420px;
+  }
+  .level-switch button {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 700;
+    border: 2px solid var(--primary);
+    background: #fff;
+    color: var(--primary-dark);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .level-switch button:first-child {
+    border-radius: 999px 0 0 999px;
+  }
+  .level-switch button:last-child {
+    border-radius: 0 999px 999px 0;
+    border-left: none;
+  }
+  .level-switch button.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+  .level-switch button small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    opacity: .85;
+    margin-top: 2px;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 960px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+  }
+  .toolbar button {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 2px solid var(--primary);
+    background: #fff;
+    color: var(--primary-dark);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+    font-weight: 600;
+  }
+  .toolbar button:hover { background: var(--primary); color: #fff; }
+  .toolbar button.active { background: var(--primary); color: #fff; box-shadow: var(--shadow); }
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 960px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+  }
+  .cat-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    border: none;
+    background: #fff;
+    color: var(--text);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .cat-btn:hover { transform: translateY(-1px); }
+  .cat-btn.active { background: var(--primary); color: #fff; font-weight: 600; box-shadow: var(--shadow); }
+
+  .stats {
+    text-align: center;
+    margin: 20px auto 0;
+    font-size: 14px;
+    color: var(--text-light);
+    padding: 0 16px;
+  }
+  .stats strong { color: var(--primary-dark); font-size: 18px; }
+
+  .word-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    max-width: 960px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+  }
+  .word-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px 12px 16px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .15s, box-shadow .15s;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .word-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(255, 140, 66, 0.28); }
+  .word-card:active { transform: scale(0.96); }
+  .word-card.speaking { border-color: var(--primary); background: #fff5eb; }
+  .word-emoji { font-size: 44px; line-height: 1; margin-bottom: 8px; display: block; }
+  .word-en { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin: 0 0 4px; word-break: break-word; }
+  .word-phonetic { font-size: 13px; color: var(--text-light); margin: 0 0 6px; font-family: "Arial Unicode MS", "Lucida Sans Unicode", Arial, sans-serif; }
+  .word-zh { font-size: 14px; color: var(--text); margin: 0; }
+  .speak-icon { position: absolute; top: 10px; right: 12px; font-size: 14px; opacity: .35; }
+
+  .flashcard-wrap { display: none; max-width: 480px; margin: 40px auto 0; padding: 0 20px; text-align: center; }
+  .flashcard-wrap.show { display: block; }
+  .flashcard {
+    background: #fff;
+    border-radius: 32px;
+    padding: 48px 24px;
+    box-shadow: 0 12px 40px rgba(255, 140, 66, 0.25);
+    cursor: pointer;
+    transition: transform .2s;
+    border: 3px solid #ffe0b2;
+  }
+  .flashcard:active { transform: scale(0.97); }
+  .flashcard .word-emoji { font-size: 96px; margin-bottom: 16px; }
+  .flashcard .word-en { font-size: 42px; margin-bottom: 8px; }
+  .flashcard .word-phonetic { font-size: 18px; margin-bottom: 10px; }
+  .flashcard .word-zh { font-size: 22px; }
+  .flashcard-controls { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+  .flashcard-controls button {
+    padding: 12px 28px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-next { background: var(--primary); color: #fff; box-shadow: var(--shadow); }
+  .btn-next:hover { background: var(--primary-dark); }
+  .btn-speak { background: #fff; color: var(--primary-dark); border: 2px solid var(--primary) !important; }
+  .btn-speak:hover { background: #fff5eb; }
+
+  .tip {
+    max-width: 720px;
+    margin: 36px auto 0;
+    padding: 20px 24px;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: 14px;
+    line-height: 1.8;
+    color: #555;
+  }
+  .tip h3 { margin: 0 0 10px; font-size: 16px; color: var(--primary-dark); }
+  .tip ul { margin: 0; padding-left: 20px; }
+  .tip li { margin-bottom: 4px; }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 21px; }
+    .level-switch button { font-size: 15px; padding: 10px 16px; }
+    .word-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .word-emoji { font-size: 36px; }
+    .word-en { font-size: 17px; }
+    .flashcard .word-emoji { font-size: 72px; }
+    .flashcard .word-en { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌈 3岁宝宝英语启蒙单词</h1>
+  <p>点一点卡片，听一听发音，每天 5 分钟轻松学</p>
+</header>
+
+<!-- 级别切换 -->
+<div class="level-switch">
+  <button id="levelBasic" class="active">基础<small>79 词 · 8 类</small></button>
+  <button id="levelAdvanced">进阶<small>200 词 · 14 类</small></button>
+</div>
+
+<div class="toolbar">
+  <button id="modeGrid" class="active">📚 分类学习</button>
+  <button id="modeFlash">🎴 随机抽卡</button>
+  <button id="autoPlayBtn">🔁 自动朗读</button>
+</div>
+
+<div class="categories" id="categories"></div>
+
+<div class="stats" id="stats"></div>
+
+<div class="word-grid" id="wordGrid"></div>
+
+<div class="flashcard-wrap" id="flashcardWrap">
+  <div class="flashcard" id="flashcard">
+    <span class="word-emoji" id="fcEmoji">🐶</span>
+    <p class="word-en" id="fcEn">dog</p>
+    <p class="word-phonetic" id="fcPhonetic">/dɔːɡ/</p>
+    <p class="word-zh" id="fcZh">狗</p>
+  </div>
+  <div class="flashcard-controls">
+    <button class="btn-speak" id="fcSpeak">🔊 再读一次</button>
+    <button class="btn-next" id="fcNext">下一个 →</button>
+  </div>
+</div>
+
+<div class="tip">
+  <h3>👶 给家长的小建议</h3>
+  <ul>
+    <li><strong>先从基础开始：</strong>基础版 79 词覆盖最常见的生活词汇，宝宝熟悉后再进入进阶版。</li>
+    <li><strong>少量多次：</strong>每次 5～10 分钟，每天 1～2 次，比一次学很久更有效。</li>
+    <li><strong>先听后说：</strong>3 岁宝宝以听为主，不强迫跟读，愿意模仿就及时鼓励。</li>
+    <li><strong>结合实物：</strong>说到 apple 就拿起苹果，说到 nose 就摸摸鼻子，建立真实联系。</li>
+    <li><strong>游戏化：</strong>用"找一找""我说你指"等游戏代替背诵，让学习像玩一样。</li>
+    <li><strong>重复是金：</strong>同一个词反复出现 10 次以上，宝宝才可能真正记住。</li>
+    <li><strong>不纠正发音：</strong>3 岁发音不准很正常，多说多听，慢慢会自然纠正。</li>
+    <li><strong>保持愉快：</strong>宝宝烦躁或抗拒时就停下来，别让英语变成压力。</li>
+  </ul>
+</div>
+
+<script>
+/* ============================================================
+   数据：basic = 79 词 / 8 类；advanced = 200 词 / 14 类
+   ============================================================ */
+const DATA = {
+
+  /* ---------------- 基础版 79 词 ---------------- */
+  basic: {
+    animals: {
+      name: '🐾 动物',
+      words: [
+        { en: 'dog',     zh: '狗',   ph: '/dɔːɡ/',    emoji: '🐶' },
+        { en: 'cat',     zh: '猫',   ph: '/kæt/',     emoji: '🐱' },
+        { en: 'bird',    zh: '鸟',   ph: '/bɜːrd/',   emoji: '🐦' },
+        { en: 'fish',    zh: '鱼',   ph: '/fɪʃ/',     emoji: '🐟' },
+        { en: 'duck',    zh: '鸭子', ph: '/dʌk/',     emoji: '🦆' },
+        { en: 'rabbit',  zh: '兔子', ph: '/ˈræbɪt/',  emoji: '🐰' },
+        { en: 'bear',    zh: '熊',   ph: '/beər/',    emoji: '🐻' },
+        { en: 'pig',     zh: '猪',   ph: '/pɪɡ/',     emoji: '🐷' },
+        { en: 'cow',     zh: '奶牛', ph: '/kaʊ/',     emoji: '🐮' },
+        { en: 'monkey',  zh: '猴子', ph: '/ˈmʌŋki/',  emoji: '🐵' },
+        { en: 'tiger',   zh: '老虎', ph: '/ˈtaɪɡər/', emoji: '🐯' },
+        { en: 'elephant',zh: '大象', ph: '/ˈelɪfənt/',emoji: '🐘' }
+      ]
+    },
+    colors: {
+      name: '🎨 颜色',
+      words: [
+        { en: 'red',    zh: '红色', ph: '/red/',     emoji: '🔴' },
+        { en: 'yellow', zh: '黄色', ph: '/ˈjeloʊ/',  emoji: '🟡' },
+        { en: 'blue',   zh: '蓝色', ph: '/bluː/',    emoji: '🔵' },
+        { en: 'green',  zh: '绿色', ph: '/ɡriːn/',   emoji: '🟢' },
+        { en: 'orange', zh: '橙色', ph: '/ˈɔːrɪndʒ/',emoji: '🟠' },
+        { en: 'purple', zh: '紫色', ph: '/ˈpɜːrpl/', emoji: '🟣' },
+        { en: 'pink',   zh: '粉色', ph: '/pɪŋk/',    emoji: '🌸' },
+        { en: 'black',  zh: '黑色', ph: '/blæk/',    emoji: '⚫' },
+        { en: 'white',  zh: '白色', ph: '/waɪt/',    emoji: '⚪' },
+        { en: 'brown',  zh: '棕色', ph: '/braʊn/',   emoji: '🟤' }
+      ]
+    },
+    numbers: {
+      name: '🔢 数字',
+      words: [
+        { en: 'one',   zh: '一', ph: '/wʌn/',   emoji: '1️⃣' },
+        { en: 'two',   zh: '二', ph: '/tuː/',   emoji: '2️⃣' },
+        { en: 'three', zh: '三', ph: '/θriː/',  emoji: '3️⃣' },
+        { en: 'four',  zh: '四', ph: '/fɔːr/',  emoji: '4️⃣' },
+        { en: 'five',  zh: '五', ph: '/faɪv/',  emoji: '5️⃣' },
+        { en: 'six',   zh: '六', ph: '/sɪks/',  emoji: '6️⃣' },
+        { en: 'seven', zh: '七', ph: '/ˈsevn/', emoji: '7️⃣' },
+        { en: 'eight', zh: '八', ph: '/eɪt/',   emoji: '8️⃣' },
+        { en: 'nine',  zh: '九', ph: '/naɪn/',  emoji: '9️⃣' },
+        { en: 'ten',   zh: '十', ph: '/ten/',   emoji: '🔟' }
+      ]
+    },
+    body: {
+      name: '👶 身体',
+      words: [
+        { en: 'eye',   zh: '眼睛', ph: '/aɪ/',    emoji: '👁️' },
+        { en: 'nose',  zh: '鼻子', ph: '/noʊz/',  emoji: '👃' },
+        { en: 'mouth', zh: '嘴巴', ph: '/maʊθ/',  emoji: '👄' },
+        { en: 'ear',   zh: '耳朵', ph: '/ɪr/',    emoji: '👂' },
+        { en: 'hand',  zh: '手',   ph: '/hænd/',  emoji: '✋' },
+        { en: 'foot',  zh: '脚',   ph: '/fʊt/',   emoji: '🦶' },
+        { en: 'hair',  zh: '头发', ph: '/heər/',  emoji: '💇' },
+        { en: 'teeth', zh: '牙齿', ph: '/tiːθ/',  emoji: '🦷' },
+        { en: 'head',  zh: '头',   ph: '/hed/',   emoji: '🧠' },
+        { en: 'face',  zh: '脸',   ph: '/feɪs/',  emoji: '😊' }
+      ]
+    },
+    fruits: {
+      name: '🍎 水果食物',
+      words: [
+        { en: 'apple',  zh: '苹果', ph: '/ˈæpl/',    emoji: '🍎' },
+        { en: 'banana', zh: '香蕉', ph: '/bəˈnænə/', emoji: '🍌' },
+        { en: 'orange', zh: '橙子', ph: '/ˈɔːrɪndʒ/',emoji: '🍊' },
+        { en: 'grape',  zh: '葡萄', ph: '/ɡreɪp/',   emoji: '🍇' },
+        { en: 'pear',   zh: '梨',   ph: '/peər/',    emoji: '🍐' },
+        { en: 'peach',  zh: '桃子', ph: '/piːtʃ/',   emoji: '🍑' },
+        { en: 'milk',   zh: '牛奶', ph: '/mɪlk/',    emoji: '🥛' },
+        { en: 'egg',    zh: '鸡蛋', ph: '/eɡ/',      emoji: '🥚' },
+        { en: 'bread',  zh: '面包', ph: '/bred/',    emoji: '🍞' },
+        { en: 'rice',   zh: '米饭', ph: '/raɪs/',    emoji: '🍚' }
+      ]
+    },
+    family: {
+      name: '👨‍👩‍👧 家人',
+      words: [
+        { en: 'mom',     zh: '妈妈',      ph: '/mɑːm/',     emoji: '👩' },
+        { en: 'dad',     zh: '爸爸',      ph: '/dæd/',      emoji: '👨' },
+        { en: 'baby',    zh: '宝宝',      ph: '/ˈbeɪbi/',   emoji: '👶' },
+        { en: 'grandma', zh: '奶奶/外婆', ph: '/ˈɡrænmɑː/', emoji: '👵' },
+        { en: 'grandpa', zh: '爷爷/外公', ph: '/ˈɡrænpɑː/', emoji: '👴' },
+        { en: 'sister',  zh: '姐妹',      ph: '/ˈsɪstər/',  emoji: '👧' },
+        { en: 'brother', zh: '兄弟',      ph: '/ˈbrʌðər/',  emoji: '👦' }
+      ]
+    },
+    things: {
+      name: '🧸 日常物品',
+      words: [
+        { en: 'ball',    zh: '球',   ph: '/bɔːl/',    emoji: '⚽' },
+        { en: 'book',    zh: '书',   ph: '/bʊk/',     emoji: '📖' },
+        { en: 'cup',     zh: '杯子', ph: '/kʌp/',     emoji: '🥤' },
+        { en: 'spoon',   zh: '勺子', ph: '/spuːn/',   emoji: '🥄' },
+        { en: 'shoe',    zh: '鞋子', ph: '/ʃuː/',     emoji: '👟' },
+        { en: 'hat',     zh: '帽子', ph: '/hæt/',     emoji: '🧢' },
+        { en: 'car',     zh: '汽车', ph: '/kɑːr/',    emoji: '🚗' },
+        { en: 'balloon', zh: '气球', ph: '/bəˈluːn/', emoji: '🎈' },
+        { en: 'teddy',   zh: '小熊', ph: '/ˈtedi/',   emoji: '🧸' },
+        { en: 'star',    zh: '星星', ph: '/stɑːr/',   emoji: '⭐' }
+      ]
+    },
+    actions: {
+      name: '🏃 简单动作',
+      words: [
+        { en: 'eat',   zh: '吃',   ph: '/iːt/',   emoji: '🍽️' },
+        { en: 'drink', zh: '喝',   ph: '/drɪŋk/', emoji: '🥛' },
+        { en: 'sleep', zh: '睡觉', ph: '/sliːp/', emoji: '😴' },
+        { en: 'run',   zh: '跑',   ph: '/rʌn/',   emoji: '🏃' },
+        { en: 'jump',  zh: '跳',   ph: '/dʒʌmp/', emoji: '🤸' },
+        { en: 'walk',  zh: '走',   ph: '/wɔːk/',  emoji: '🚶' },
+        { en: 'smile', zh: '笑',   ph: '/smaɪl/', emoji: '😄' },
+        { en: 'cry',   zh: '哭',   ph: '/kraɪ/',  emoji: '😢' },
+        { en: 'clap',  zh: '拍手', ph: '/klæp/',  emoji: '👏' },
+        { en: 'hug',   zh: '拥抱', ph: '/hʌɡ/',   emoji: '🤗' }
+      ]
+    }
+  },
+
+  /* ---------------- 进阶版 200 词 ---------------- */
+  advanced: {
+    animals: {
+      name: '🐾 动物',
+      words: [
+        { en: 'dog',        zh: '狗',       ph: '/dɔːɡ/',      emoji: '🐶' },
+        { en: 'cat',        zh: '猫',       ph: '/kæt/',       emoji: '🐱' },
+        { en: 'bird',       zh: '鸟',       ph: '/bɜːrd/',     emoji: '🐦' },
+        { en: 'fish',       zh: '鱼',       ph: '/fɪʃ/',       emoji: '🐟' },
+        { en: 'duck',       zh: '鸭子',     ph: '/dʌk/',       emoji: '🦆' },
+        { en: 'rabbit',     zh: '兔子',     ph: '/ˈræbɪt/',    emoji: '🐰' },
+        { en: 'bear',       zh: '熊',       ph: '/beər/',      emoji: '🐻' },
+        { en: 'pig',        zh: '猪',       ph: '/pɪɡ/',       emoji: '🐷' },
+        { en: 'cow',        zh: '奶牛',     ph: '/kaʊ/',       emoji: '🐮' },
+        { en: 'monkey',     zh: '猴子',     ph: '/ˈmʌŋki/',    emoji: '🐵' },
+        { en: 'tiger',      zh: '老虎',     ph: '/ˈtaɪɡər/',   emoji: '🐯' },
+        { en: 'elephant',   zh: '大象',     ph: '/ˈelɪfənt/',  emoji: '🐘' },
+        { en: 'lion',       zh: '狮子',     ph: '/ˈlaɪən/',    emoji: '🦁' },
+        { en: 'horse',      zh: '马',       ph: '/hɔːrs/',     emoji: '🐴' },
+        { en: 'sheep',      zh: '绵羊',     ph: '/ʃiːp/',      emoji: '🐑' },
+        { en: 'frog',       zh: '青蛙',     ph: '/frɔːɡ/',     emoji: '🐸' },
+        { en: 'mouse',      zh: '老鼠',     ph: '/maʊs/',      emoji: '🐭' },
+        { en: 'panda',      zh: '熊猫',     ph: '/ˈpændə/',    emoji: '🐼' },
+        { en: 'chicken',    zh: '小鸡',     ph: '/ˈtʃɪkɪn/',   emoji: '🐔' },
+        { en: 'butterfly',  zh: '蝴蝶',     ph: '/ˈbʌtərflaɪ/',emoji: '🦋' },
+        { en: 'bee',        zh: '蜜蜂',     ph: '/biː/',       emoji: '🐝' },
+        { en: 'snake',      zh: '蛇',       ph: '/sneɪk/',     emoji: '🐍' }
+      ]
+    },
+    colors: {
+      name: '🎨 颜色',
+      words: [
+        { en: 'red',    zh: '红色', ph: '/red/',      emoji: '🔴' },
+        { en: 'yellow', zh: '黄色', ph: '/ˈjeloʊ/',   emoji: '🟡' },
+        { en: 'blue',   zh: '蓝色', ph: '/bluː/',     emoji: '🔵' },
+        { en: 'green',  zh: '绿色', ph: '/ɡriːn/',    emoji: '🟢' },
+        { en: 'orange', zh: '橙色', ph: '/ˈɔːrɪndʒ/', emoji: '🟠' },
+        { en: 'purple', zh: '紫色', ph: '/ˈpɜːrpl/',  emoji: '🟣' },
+        { en: 'pink',   zh: '粉色', ph: '/pɪŋk/',     emoji: '🌸' },
+        { en: 'black',  zh: '黑色', ph: '/blæk/',     emoji: '⚫' },
+        { en: 'white',  zh: '白色', ph: '/waɪt/',     emoji: '⚪' },
+        { en: 'brown',  zh: '棕色', ph: '/braʊn/',    emoji: '🟤' },
+        { en: 'gray',   zh: '灰色', ph: '/ɡreɪ/',     emoji: '🩶' },
+        { en: 'gold',   zh: '金色', ph: '/ɡoʊld/',    emoji: '🟡' }
+      ]
+    },
+    numbers: {
+      name: '🔢 数字',
+      words: [
+        { en: 'one',      zh: '一',   ph: '/wʌn/',          emoji: '1️⃣' },
+        { en: 'two',      zh: '二',   ph: '/tuː/',          emoji: '2️⃣' },
+        { en: 'three',    zh: '三',   ph: '/θriː/',         emoji: '3️⃣' },
+        { en: 'four',     zh: '四',   ph: '/fɔːr/',         emoji: '4️⃣' },
+        { en: 'five',     zh: '五',   ph: '/faɪv/',         emoji: '5️⃣' },
+        { en: 'six',      zh: '六',   ph: '/sɪks/',         emoji: '6️⃣' },
+        { en: 'seven',    zh: '七',   ph: '/ˈsevn/',        emoji: '7️⃣' },
+        { en: 'eight',    zh: '八',   ph: '/eɪt/',          emoji: '8️⃣' },
+        { en: 'nine',     zh: '九',   ph: '/naɪn/',         emoji: '9️⃣' },
+        { en: 'ten',      zh: '十',   ph: '/ten/',          emoji: '🔟' },
+        { en: 'eleven',   zh: '十一', ph: '/ɪˈlevn/',       emoji: '1️⃣1️⃣' },
+        { en: 'twelve',   zh: '十二', ph: '/twelv/',        emoji: '1️⃣2️⃣' },
+        { en: 'thirteen', zh: '十三', ph: '/ˌθɜːrˈtiːn/',   emoji: '1️⃣3️⃣' },
+        { en: 'fourteen', zh: '十四', ph: '/ˌfɔːrˈtiːn/',   emoji: '1️⃣4️⃣' },
+        { en: 'fifteen',  zh: '十五', ph: '/ˌfɪfˈtiːn/',    emoji: '1️⃣5️⃣' }
+      ]
+    },
+    body: {
+      name: '👶 身体',
+      words: [
+        { en: 'eye',    zh: '眼睛', ph: '/aɪ/',      emoji: '👁️' },
+        { en: 'nose',   zh: '鼻子', ph: '/noʊz/',    emoji: '👃' },
+        { en: 'mouth',  zh: '嘴巴', ph: '/maʊθ/',    emoji: '👄' },
+        { en: 'ear',    zh: '耳朵', ph: '/ɪr/',      emoji: '👂' },
+        { en: 'hand',   zh: '手',   ph: '/hænd/',    emoji: '✋' },
+        { en: 'foot',   zh: '脚',   ph: '/fʊt/',     emoji: '🦶' },
+        { en: 'hair',   zh: '头发', ph: '/heər/',    emoji: '💇' },
+        { en: 'teeth',  zh: '牙齿', ph: '/tiːθ/',    emoji: '🦷' },
+        { en: 'head',   zh: '头',   ph: '/hed/',     emoji: '🧠' },
+        { en: 'face',   zh: '脸',   ph: '/feɪs/',    emoji: '😊' },
+        { en: 'finger', zh: '手指', ph: '/ˈfɪŋɡər/', emoji: '☝️' },
+        { en: 'toe',    zh: '脚趾', ph: '/toʊ/',     emoji: '🦶' },
+        { en: 'knee',   zh: '膝盖', ph: '/niː/',     emoji: '🦵' },
+        { en: 'arm',    zh: '手臂', ph: '/ɑːrm/',    emoji: '💪' },
+        { en: 'leg',    zh: '腿',   ph: '/leɡ/',     emoji: '🦵' },
+        { en: 'tummy',  zh: '肚子', ph: '/ˈtʌmi/',   emoji: '🫃' },
+        { en: 'tongue', zh: '舌头', ph: '/tʌŋ/',     emoji: '👅' },
+        { en: 'neck',   zh: '脖子', ph: '/nek/',     emoji: '🧣' }
+      ]
+    },
+    fruits: {
+      name: '🍎 水果食物',
+      words: [
+        { en: 'apple',      zh: '苹果',   ph: '/ˈæpl/',        emoji: '🍎' },
+        { en: 'banana',     zh: '香蕉',   ph: '/bəˈnænə/',     emoji: '🍌' },
+        { en: 'orange',     zh: '橙子',   ph: '/ˈɔːrɪndʒ/',    emoji: '🍊' },
+        { en: 'grape',      zh: '葡萄',   ph: '/ɡreɪp/',       emoji: '🍇' },
+        { en: 'pear',       zh: '梨',     ph: '/peər/',        emoji: '🍐' },
+        { en: 'peach',      zh: '桃子',   ph: '/piːtʃ/',       emoji: '🍑' },
+        { en: 'milk',       zh: '牛奶',   ph: '/mɪlk/',        emoji: '🥛' },
+        { en: 'egg',        zh: '鸡蛋',   ph: '/eɡ/',          emoji: '🥚' },
+        { en: 'bread',      zh: '面包',   ph: '/bred/',        emoji: '🍞' },
+        { en: 'rice',       zh: '米饭',   ph: '/raɪs/',        emoji: '🍚' },
+        { en: 'strawberry', zh: '草莓',   ph: '/ˈstrɔːberi/',  emoji: '🍓' },
+        { en: 'watermelon', zh: '西瓜',   ph: '/ˈwɔːtərmelən/',emoji: '🍉' },
+        { en: 'tomato',     zh: '西红柿', ph: '/təˈmeɪtoʊ/',   emoji: '🍅' },
+        { en: 'carrot',     zh: '胡萝卜', ph: '/ˈkærət/',      emoji: '🥕' },
+        { en: 'cake',       zh: '蛋糕',   ph: '/keɪk/',        emoji: '🎂' },
+        { en: 'cookie',     zh: '饼干',   ph: '/ˈkʊki/',       emoji: '🍪' },
+        { en: 'ice cream',  zh: '冰淇淋', ph: '/aɪs kriːm/',   emoji: '🍦' },
+        { en: 'juice',      zh: '果汁',   ph: '/dʒuːs/',       emoji: '🧃' },
+        { en: 'water',      zh: '水',     ph: '/ˈwɔːtər/',     emoji: '💧' },
+        { en: 'candy',      zh: '糖果',   ph: '/ˈkændi/',      emoji: '🍬' },
+        { en: 'noodle',     zh: '面条',   ph: '/ˈnuːdl/',      emoji: '🍜' },
+        { en: 'soup',       zh: '汤',     ph: '/suːp/',        emoji: '🍲' }
+      ]
+    },
+    family: {
+      name: '👨‍👩‍👧 家人',
+      words: [
+        { en: 'mom',     zh: '妈妈',       ph: '/mɑːm/',     emoji: '👩' },
+        { en: 'dad',     zh: '爸爸',       ph: '/dæd/',      emoji: '👨' },
+        { en: 'baby',    zh: '宝宝',       ph: '/ˈbeɪbi/',   emoji: '👶' },
+        { en: 'grandma', zh: '奶奶/外婆',  ph: '/ˈɡrænmɑː/', emoji: '👵' },
+        { en: 'grandpa', zh: '爷爷/外公',  ph: '/ˈɡrænpɑː/', emoji: '👴' },
+        { en: 'sister',  zh: '姐妹',       ph: '/ˈsɪstər/',  emoji: '👧' },
+        { en: 'brother', zh: '兄弟',       ph: '/ˈbrʌðər/',  emoji: '👦' },
+        { en: 'aunt',    zh: '姑姑/阿姨',  ph: '/ænt/',      emoji: '👩‍🦰' },
+        { en: 'uncle',   zh: '叔叔/舅舅',  ph: '/ˈʌŋkl/',    emoji: '👨‍🦱' },
+        { en: 'cousin',  zh: '表兄弟姐妹', ph: '/ˈkʌzn/',    emoji: '🧒' },
+        { en: 'family',  zh: '家人',       ph: '/ˈfæməli/',  emoji: '👨‍👩‍👧' }
+      ]
+    },
+    things: {
+      name: '🧸 日常物品',
+      words: [
+        { en: 'ball',    zh: '球',   ph: '/bɔːl/',      emoji: '⚽' },
+        { en: 'book',    zh: '书',   ph: '/bʊk/',       emoji: '📖' },
+        { en: 'cup',     zh: '杯子', ph: '/kʌp/',       emoji: '🥤' },
+        { en: 'spoon',   zh: '勺子', ph: '/spuːn/',     emoji: '🥄' },
+        { en: 'shoe',    zh: '鞋子', ph: '/ʃuː/',       emoji: '👟' },
+        { en: 'hat',     zh: '帽子', ph: '/hæt/',       emoji: '🧢' },
+        { en: 'car',     zh: '汽车', ph: '/kɑːr/',      emoji: '🚗' },
+        { en: 'balloon', zh: '气球', ph: '/bəˈluːn/',   emoji: '🎈' },
+        { en: 'teddy',   zh: '小熊', ph: '/ˈtedi/',     emoji: '🧸' },
+        { en: 'star',    zh: '星星', ph: '/stɑːr/',     emoji: '⭐' },
+        { en: 'chair',   zh: '椅子', ph: '/tʃeər/',     emoji: '🪑' },
+        { en: 'table',   zh: '桌子', ph: '/ˈteɪbl/',    emoji: '🪑' },
+        { en: 'bed',     zh: '床',   ph: '/bed/',       emoji: '🛏️' },
+        { en: 'door',    zh: '门',   ph: '/dɔːr/',      emoji: '🚪' },
+        { en: 'window',  zh: '窗户', ph: '/ˈwɪndoʊ/',   emoji: '🪟' },
+        { en: 'clock',   zh: '钟',   ph: '/klɑːk/',     emoji: '🕐' },
+        { en: 'key',     zh: '钥匙', ph: '/kiː/',       emoji: '🔑' },
+        { en: 'bag',     zh: '包',   ph: '/bæɡ/',       emoji: '👜' },
+        { en: 'pencil',  zh: '铅笔', ph: '/ˈpensl/',    emoji: '✏️' },
+        { en: 'phone',   zh: '手机', ph: '/foʊn/',      emoji: '📱' },
+        { en: 'flower',  zh: '花',   ph: '/ˈflaʊər/',   emoji: '🌸' },
+        { en: 'toy',     zh: '玩具', ph: '/tɔɪ/',       emoji: '🧩' }
+      ]
+    },
+    actions: {
+      name: '🏃 简单动作',
+      words: [
+        { en: 'eat',   zh: '吃',   ph: '/iːt/',     emoji: '🍽️' },
+        { en: 'drink', zh: '喝',   ph: '/drɪŋk/',   emoji: '🥛' },
+        { en: 'sleep', zh: '睡觉', ph: '/sliːp/',   emoji: '😴' },
+        { en: 'run',   zh: '跑',   ph: '/rʌn/',     emoji: '🏃' },
+        { en: 'jump',  zh: '跳',   ph: '/dʒʌmp/',   emoji: '🤸' },
+        { en: 'walk',  zh: '走',   ph: '/wɔːk/',    emoji: '🚶' },
+        { en: 'smile', zh: '笑',   ph: '/smaɪl/',   emoji: '😄' },
+        { en: 'cry',   zh: '哭',   ph: '/kraɪ/',    emoji: '😢' },
+        { en: 'clap',  zh: '拍手', ph: '/klæp/',    emoji: '👏' },
+        { en: 'hug',   zh: '拥抱', ph: '/hʌɡ/',     emoji: '🤗' },
+        { en: 'sit',   zh: '坐',   ph: '/sɪt/',     emoji: '🪑' },
+        { en: 'stand', zh: '站',   ph: '/stænd/',   emoji: '🧍' },
+        { en: 'open',  zh: '打开', ph: '/ˈoʊpən/',  emoji: '📂' },
+        { en: 'close', zh: '关上', ph: '/kloʊz/',   emoji: '🚪' },
+        { en: 'read',  zh: '读',   ph: '/riːd/',    emoji: '📖' },
+        { en: 'write', zh: '写',   ph: '/raɪt/',    emoji: '✍️' },
+        { en: 'sing',  zh: '唱歌', ph: '/sɪŋ/',     emoji: '🎤' },
+        { en: 'dance', zh: '跳舞', ph: '/dæns/',    emoji: '💃' },
+        { en: 'wash',  zh: '洗',   ph: '/wɔːʃ/',    emoji: '🧼' },
+        { en: 'draw',  zh: '画画', ph: '/drɔː/',    emoji: '🎨' },
+        { en: 'kiss',  zh: '亲亲', ph: '/kɪs/',     emoji: '😘' },
+        { en: 'wave',  zh: '挥手', ph: '/weɪv/',    emoji: '👋' }
+      ]
+    },
+    transport: {
+      name: '🚗 交通工具',
+      words: [
+        { en: 'car',         zh: '小汽车', ph: '/kɑːr/',          emoji: '🚗' },
+        { en: 'bus',         zh: '公交车', ph: '/bʌs/',           emoji: '🚌' },
+        { en: 'bike',        zh: '自行车', ph: '/baɪk/',          emoji: '🚲' },
+        { en: 'train',       zh: '火车',   ph: '/treɪn/',         emoji: '🚂' },
+        { en: 'plane',       zh: '飞机',   ph: '/pleɪn/',         emoji: '✈️' },
+        { en: 'boat',        zh: '小船',   ph: '/boʊt/',          emoji: '⛵' },
+        { en: 'taxi',        zh: '出租车', ph: '/ˈtæksi/',        emoji: '🚕' },
+        { en: 'truck',       zh: '卡车',   ph: '/trʌk/',          emoji: '🚚' },
+        { en: 'ship',        zh: '轮船',   ph: '/ʃɪp/',           emoji: '🚢' },
+        { en: 'rocket',      zh: '火箭',   ph: '/ˈrɑːkɪt/',       emoji: '🚀' },
+        { en: 'ambulance',   zh: '救护车', ph: '/ˈæmbjələns/',    emoji: '🚑' },
+        { en: 'police car',  zh: '警车',   ph: '/pəˈliːs kɑːr/',  emoji: '🚓' }
+      ]
+    },
+    nature: {
+      name: '🌤️ 天气自然',
+      words: [
+        { en: 'sun',     zh: '太阳', ph: '/sʌn/',      emoji: '☀️' },
+        { en: 'moon',    zh: '月亮', ph: '/muːn/',     emoji: '🌙' },
+        { en: 'star',    zh: '星星', ph: '/stɑːr/',    emoji: '⭐' },
+        { en: 'cloud',   zh: '云',   ph: '/klaʊd/',    emoji: '☁️' },
+        { en: 'rain',    zh: '雨',   ph: '/reɪn/',     emoji: '🌧️' },
+        { en: 'snow',    zh: '雪',   ph: '/snoʊ/',     emoji: '❄️' },
+        { en: 'wind',    zh: '风',   ph: '/wɪnd/',     emoji: '🌬️' },
+        { en: 'sky',     zh: '天空', ph: '/skaɪ/',     emoji: '🌌' },
+        { en: 'tree',    zh: '树',   ph: '/triː/',     emoji: '🌳' },
+        { en: 'flower',  zh: '花',   ph: '/ˈflaʊər/',  emoji: '🌺' },
+        { en: 'grass',   zh: '草',   ph: '/ɡræs/',     emoji: '🌿' },
+        { en: 'rainbow', zh: '彩虹', ph: '/ˈreɪnboʊ/', emoji: '🌈' },
+        { en: 'hot',     zh: '热',   ph: '/hɑːt/',     emoji: '🥵' },
+        { en: 'cold',    zh: '冷',   ph: '/koʊld/',    emoji: '🥶' },
+        { en: 'fire',    zh: '火',   ph: '/ˈfaɪər/',   emoji: '🔥' },
+        { en: 'water',   zh: '水',   ph: '/ˈwɔːtər/',  emoji: '💧' }
+      ]
+    },
+    clothes: {
+      name: '👕 服装',
+      words: [
+        { en: 'shirt',   zh: '衬衫',   ph: '/ʃɜːrt/',    emoji: '👕' },
+        { en: 'pants',   zh: '裤子',   ph: '/pænts/',    emoji: '👖' },
+        { en: 'dress',   zh: '连衣裙', ph: '/dres/',     emoji: '👗' },
+        { en: 'shoes',   zh: '鞋子',   ph: '/ʃuːz/',     emoji: '👟' },
+        { en: 'socks',   zh: '袜子',   ph: '/sɑːks/',    emoji: '🧦' },
+        { en: 'hat',     zh: '帽子',   ph: '/hæt/',      emoji: '🧢' },
+        { en: 'coat',    zh: '外套',   ph: '/koʊt/',     emoji: '🧥' },
+        { en: 'shorts',  zh: '短裤',   ph: '/ʃɔːrts/',   emoji: '🩳' },
+        { en: 'skirt',   zh: '短裙',   ph: '/skɜːrt/',   emoji: '👗' },
+        { en: 'scarf',   zh: '围巾',   ph: '/skɑːrf/',   emoji: '🧣' },
+        { en: 'gloves',  zh: '手套',   ph: '/ɡlʌvz/',    emoji: '🧤' },
+        { en: 'pajamas', zh: '睡衣',   ph: '/pəˈdʒæməz/',emoji: '🩱' }
+      ]
+    },
+    shapes: {
+      name: '🔷 形状',
+      words: [
+        { en: 'circle',    zh: '圆形',   ph: '/ˈsɜːrkl/',    emoji: '⭕' },
+        { en: 'square',    zh: '正方形', ph: '/skweər/',     emoji: '🟥' },
+        { en: 'triangle',  zh: '三角形', ph: '/ˈtraɪæŋɡl/',  emoji: '🔺' },
+        { en: 'star',      zh: '星形',   ph: '/stɑːr/',      emoji: '⭐' },
+        { en: 'heart',     zh: '心形',   ph: '/hɑːrt/',      emoji: '❤️' },
+        { en: 'rectangle', zh: '长方形', ph: '/ˈrektæŋɡl/',  emoji: '▬' },
+        { en: 'oval',      zh: '椭圆形', ph: '/ˈoʊvl/',      emoji: '🥚' },
+        { en: 'diamond',   zh: '菱形',   ph: '/ˈdaɪmənd/',   emoji: '🔶' },
+        { en: 'cross',     zh: '十字',   ph: '/krɔːs/',      emoji: '➕' },
+        { en: 'line',      zh: '直线',   ph: '/laɪn/',       emoji: '➖' }
+      ]
+    },
+    feelings: {
+      name: '😊 情绪感受',
+      words: [
+        { en: 'happy',     zh: '开心', ph: '/ˈhæpi/',      emoji: '😄' },
+        { en: 'sad',       zh: '难过', ph: '/sæd/',        emoji: '😢' },
+        { en: 'angry',     zh: '生气', ph: '/ˈæŋɡri/',     emoji: '😠' },
+        { en: 'scared',    zh: '害怕', ph: '/skerd/',      emoji: '😨' },
+        { en: 'tired',     zh: '累了', ph: '/ˈtaɪərd/',    emoji: '😪' },
+        { en: 'hungry',    zh: '饿了', ph: '/ˈhʌŋɡri/',    emoji: '🍽️' },
+        { en: 'thirsty',   zh: '渴了', ph: '/ˈθɜːrsti/',   emoji: '🥤' },
+        { en: 'sleepy',    zh: '困了', ph: '/ˈsliːpi/',    emoji: '😴' },
+        { en: 'excited',   zh: '兴奋', ph: '/ɪkˈsaɪtɪd/',  emoji: '🤩' },
+        { en: 'surprised', zh: '惊讶', ph: '/sərˈpraɪzd/', emoji: '😲' },
+        { en: 'love',      zh: '爱',   ph: '/lʌv/',        emoji: '❤️' },
+        { en: 'laugh',     zh: '大笑', ph: '/læf/',        emoji: '😂' }
+      ]
+    },
+    phrases: {
+      name: '💬 日常短语',
+      words: [
+        { en: 'hello',        zh: '你好',   ph: '/həˈloʊ/',       emoji: '👋' },
+        { en: 'goodbye',      zh: '再见',   ph: '/ˌɡʊdˈbaɪ/',     emoji: '👋' },
+        { en: 'thank you',    zh: '谢谢',   ph: '/ˈθæŋk juː/',    emoji: '🙏' },
+        { en: 'please',       zh: '请',     ph: '/pliːz/',        emoji: '🥺' },
+        { en: 'sorry',        zh: '对不起', ph: '/ˈsɑːri/',       emoji: '🙇' },
+        { en: 'yes',          zh: '是的',   ph: '/jes/',          emoji: '✅' },
+        { en: 'no',           zh: '不是',   ph: '/noʊ/',          emoji: '❌' },
+        { en: 'good morning', zh: '早上好', ph: '/ɡʊd ˈmɔːrnɪŋ/', emoji: '🌅' },
+        { en: 'good night',   zh: '晚安',   ph: '/ɡʊd naɪt/',     emoji: '🌙' },
+        { en: 'I love you',   zh: '我爱你', ph: '/aɪ lʌv juː/',   emoji: '❤️' },
+        { en: 'come here',    zh: '过来',   ph: '/kʌm hɪr/',      emoji: '🤙' },
+        { en: 'sit down',     zh: '坐下',   ph: '/sɪt daʊn/',     emoji: '🪑' },
+        { en: 'stand up',     zh: '站起来', ph: '/stænd ʌp/',     emoji: '🧍' },
+        { en: 'wash hands',   zh: '洗手',   ph: '/wɔːʃ hændz/',   emoji: '🧼' },
+        { en: 'good job',     zh: '做得好', ph: '/ɡʊd dʒɑːb/',    emoji: '👍' },
+        { en: 'be careful',   zh: '小心',   ph: '/bi ˈkerfl/',    emoji: '⚠️' }
+      ]
+    }
+  }
+};
+
+/* ================= 状态 ================= */
+let level = 'basic';                       // 'basic' | 'advanced'
+let currentCat = Object.keys(DATA[level])[0];
+let autoPlayTimer = null;
+let flashIndex = 0;
+let flashPool = [];
+
+/* ================= DOM ================= */
+const categoriesEl = document.getElementById('categories');
+const wordGrid     = document.getElementById('wordGrid');
+const statsEl      = document.getElementById('stats');
+const levelBasicBtn= document.getElementById('levelBasic');
+const levelAdvBtn  = document.getElementById('levelAdvanced');
+const modeGridBtn  = document.getElementById('modeGrid');
+const modeFlashBtn = document.getElementById('modeFlash');
+const autoPlayBtn  = document.getElementById('autoPlayBtn');
+const flashcardWrap= document.getElementById('flashcardWrap');
+const flashcard    = document.getElementById('flashcard');
+const fcEmoji      = document.getElementById('fcEmoji');
+const fcEn         = document.getElementById('fcEn');
+const fcPhonetic   = document.getElementById('fcPhonetic');
+const fcZh         = document.getElementById('fcZh');
+
+/* ================= 语音合成 ================= */
+let preferredVoice = null;
+
+function pickVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return;
+  const prefer = [
+    v => /en-GB/i.test(v.lang) && /female|Serena|Kate|Google UK English Female/i.test(v.name),
+    v => /en-US/i.test(v.lang) && /female|Samantha|Google US English/i.test(v.name),
+    v => /^en/i.test(v.lang)
+  ];
+  for (const test of prefer) {
+    const found = voices.find(test);
+    if (found) { preferredVoice = found; break; }
+  }
+}
+
+if ('speechSynthesis' in window) {
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+}
+
+function speak(text, cardEl) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.75;
+  u.pitch = 1.1;
+  if (preferredVoice) u.voice = preferredVoice;
+
+  if (cardEl) {
+    cardEl.classList.add('speaking');
+    u.onend = () => cardEl.classList.remove('speaking');
+  }
+  window.speechSynthesis.speak(u);
+}
+
+/* ================= 工具：当前级别的数据 ================= */
+function currentData() { return DATA[level]; }
+
+/* ================= 渲染 ================= */
+function renderLevelButtons() {
+  levelBasicBtn.classList.toggle('active', level === 'basic');
+  levelAdvBtn.classList.toggle('active', level === 'advanced');
+}
+
+function renderCategories() {
+  categoriesEl.innerHTML = '';
+  Object.keys(currentData()).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (key === currentCat ? ' active' : '');
+    btn.textContent = currentData()[key].name;
+    btn.addEventListener('click', () => {
+      currentCat = key;
+      renderCategories();
+      renderWords();
+      updateStats();
+      stopAutoPlay();
+    });
+    categoriesEl.appendChild(btn);
+  });
+}
+
+function renderWords() {
+  wordGrid.innerHTML = '';
+  const words = currentData()[currentCat].words;
+  words.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.style.animation = `fadeUp .3s ease ${Math.min(i * 0.02, 0.4)}s both`;
+    card.innerHTML = `
+      <span class="speak-icon">🔊</span>
+      <span class="word-emoji">${w.emoji}</span>
+      <p class="word-en">${w.en}</p>
+      <p class="word-phonetic">${w.ph}</p>
+      <p class="word-zh">${w.zh}</p>
+    `;
+    card.addEventListener('click', () => speak(w.en, card));
+    wordGrid.appendChild(card);
+  });
+}
+
+function updateStats() {
+  const catCount = Object.keys(currentData()).length;
+  const wordCount = Object.values(currentData())
+    .reduce((sum, c) => sum + c.words.length, 0);
+  const currentCount = currentData()[currentCat].words.length;
+  const levelName = level === 'basic' ? '基础版' : '进阶版';
+  statsEl.innerHTML = `${levelName}：共 <strong>${wordCount}</strong> 个单词 · 
+    <strong>${catCount}</strong> 个类别 · 
+    当前类别 <strong>${currentCount}</strong> 个`;
+}
+
+/* ================= 随机抽卡 ================= */
+function buildFlashPool() {
+  flashPool = [];
+  Object.keys(currentData()).forEach(k => {
+    currentData()[k].words.forEach(w => flashPool.push(w));
+  });
+}
+
+function showFlashCard() {
+  const w = flashPool[flashIndex % flashPool.length];
+  fcEmoji.textContent = w.emoji;
+  fcEn.textContent = w.en;
+  fcPhonetic.textContent = w.ph;
+  fcZh.textContent = w.zh;
+  flashcard.style.animation = 'pop .35s ease';
+  speak(w.en, flashcard);
+}
+
+function nextFlashCard() {
+  flashIndex = Math.floor(Math.random() * flashPool.length);
+  showFlashCard();
+}
+
+/* ================= 级别切换 ================= */
+function setLevel(newLevel) {
+  if (level === newLevel) return;
+  level = newLevel;
+  currentCat = Object.keys(currentData())[0];
+  stopAutoPlay();
+  renderLevelButtons();
+  renderCategories();
+  renderWords();
+  updateStats();
+  buildFlashPool();
+  // 如果当前在抽卡模式，刷新一张新卡
+  if (flashcardWrap.classList.contains('show')) {
+    nextFlashCard();
+  }
+}
+
+/* ================= 模式切换 ================= */
+function setMode(mode) {
+  stopAutoPlay();
+  if (mode === 'grid') {
+    modeGridBtn.classList.add('active');
+    modeFlashBtn.classList.remove('active');
+    categoriesEl.style.display = 'flex';
+    statsEl.style.display = 'block';
+    wordGrid.style.display = 'grid';
+    flashcardWrap.classList.remove('show');
+  } else {
+    modeFlashBtn.classList.add('active');
+    modeGridBtn.classList.remove('active');
+    categoriesEl.style.display = 'none';
+    statsEl.style.display = 'none';
+    wordGrid.style.display = 'none';
+    flashcardWrap.classList.add('show');
+    nextFlashCard();
+  }
+}
+
+/* ================= 自动朗读 ================= */
+function startAutoPlay() {
+  autoPlayBtn.classList.add('active');
+  autoPlayBtn.textContent = '⏸ 停止朗读';
+  const words = currentData()[currentCat].words;
+  const cards = wordGrid.querySelectorAll('.word-card');
+  let i = 0;
+
+  function next() {
+    if (i >= words.length) { stopAutoPlay(); return; }
+    speak(words[i].en, cards[i]);
+    i++;
+    autoPlayTimer = setTimeout(next, 2200);
+  }
+  next();
+}
+
+function stopAutoPlay() {
+  if (autoPlayTimer) clearTimeout(autoPlayTimer);
+  autoPlayTimer = null;
+  autoPlayBtn.classList.remove('active');
+  autoPlayBtn.textContent = '🔁 自动朗读';
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+/* ================= 事件 ================= */
+levelBasicBtn.addEventListener('click', () => setLevel('basic'));
+levelAdvBtn.addEventListener('click',  () => setLevel('advanced'));
+
+modeGridBtn.addEventListener('click', () => setMode('grid'));
+modeFlashBtn.addEventListener('click', () => setMode('flash'));
+autoPlayBtn.addEventListener('click', () => {
+  if (autoPlayTimer) stopAutoPlay();
+  else startAutoPlay();
+});
+
+flashcard.addEventListener('click', () => {
+  const w = flashPool[flashIndex % flashPool.length];
+  speak(w.en, flashcard);
+});
+document.getElementById('fcSpeak').addEventListener('click', () => {
+  const w = flashPool[flashIndex % flashPool.length];
+  speak(w.en, flashcard);
+});
+document.getElementById('fcNext').addEventListener('click', nextFlashCard);
+
+/* ================= 动画 ================= */
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop {
+    0%   { transform: scale(0.9); opacity: .6; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+`;
+document.head.appendChild(style);
+
+/* ================= 初始化 ================= */
+renderLevelButtons();
+renderCategories();
+renderWords();
+updateStats();
+buildFlashPool();
+</script>
+</body>
+</html>
